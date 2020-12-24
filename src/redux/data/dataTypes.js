@@ -1,0 +1,12 @@
+export const FETCH_DATA_REQUEST = "FETCH_DATA_REQUEST";
+export const FETCH_DATA_SUCCESS = "FETCH_DATA_SUCCESS";
+export const FETCH_DATA_FAILURE = "FETCH_DATA_FAILURE";
+
+export const DELETE_ENTRY = "DELETE_ENTRY";
+export const EDIT_ENTRY = "EDIT_ENTRY";
+export const NEW_ENTRY = "NEW_ENTRY";
+
+export const DELETE_OPEN = "DELETE_OPEN";
+export const DELETE_CLOSE = "DELETE_CLOSE";
+
+export const CHANGE_MODE = "CHANGE_MODE";

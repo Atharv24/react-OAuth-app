@@ -8,10 +8,11 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-// import { FavoriteIcon, ShareIcon } from "@material-ui/icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { changeMode, delOpen, formOpen } from "../redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,10 +38,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DetailCard(props) {
+function formatData(data) {
+  return data === "" ? "null" : data;
+}
+
+function DetailCard({ entry, handleDel, openForm, changeMode }) {
   const theme = useTheme();
   const classes = useStyles(theme);
-  const { data, handleEdit, handleDel } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -48,6 +52,10 @@ export default function DetailCard(props) {
     setOpen(!open);
   };
 
+  const _handleEdit = () => {
+    changeMode("edit");
+    openForm(entry);
+  };
   return (
     <Card
       elevation={0}
@@ -59,38 +67,40 @@ export default function DetailCard(props) {
           <CardContent className={classes.body}>
             <div>
               <Typography className={classes.title}>
-                {data.customer_name}
+                {formatData(entry.customer_name)}
               </Typography>
               <Typography color="textSecondary">
-                {open ? data.customer_email : data.product}
+                {formatData(open ? entry.customer_email : entry.product)}
               </Typography>
               {open ? (
                 <Typography variant="overline" color="textSecondary">
-                  {data.id}
+                  {formatData(entry.id)}
                 </Typography>
               ) : null}
             </div>
             <div>
               {!open ? (
                 <Typography className={classes.quantity}>
-                  {"x" + data.quantity}
+                  {"x" + entry.quantity}
                 </Typography>
               ) : null}
             </div>
           </CardContent>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography>{data.product + " x" + data.quantity}</Typography>
+              <Typography>
+                {formatData(entry.product) + " x" + entry.quantity}
+              </Typography>
             </CardContent>
           </Collapse>
         </CardActionArea>
       </div>
       {open ? (
         <div className={classes.icons}>
-          <IconButton>
-            <EditIcon onClick={() => handleEdit(data)} />
+          <IconButton onClick={_handleEdit}>
+            <EditIcon />
           </IconButton>
-          <IconButton onClick={() => handleDel(data)}>
+          <IconButton onClick={() => handleDel(entry.id)}>
             <DeleteIcon />
           </IconButton>
         </div>
@@ -98,3 +108,19 @@ export default function DetailCard(props) {
     </Card>
   );
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    entry: ownProps.entry,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    handleDel: (id) => dispatch(delOpen(id)),
+    openForm: (entry) => dispatch(formOpen(entry)),
+    changeMode: (mode) => dispatch(changeMode(mode)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetailCard);
