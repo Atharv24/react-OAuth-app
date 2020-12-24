@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 
 import DataList from "./components/list";
+import Login, { Logout } from "./components/auth";
+import UserCard from "./components/userCard";
 
 const theme = createMuiTheme({
   palette: {
@@ -35,7 +37,11 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <div className={classes.root}>
-          <div>hi</div>
+          <div>
+            <Login />
+            <UserCard />
+            <Logout />
+          </div>
           <div className={classes.list}>
             <DataList />
           </div>
